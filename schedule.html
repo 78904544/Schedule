@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <script src="/js/data.js" defer></script>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сводное расписание</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .day-cell {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+            vertical-align: top;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="index.html" class="nav-logo">Расписание</a>
+                <div class="nav-links">
+                    <a href="index.html">Главная</a>
+                    <a href="schedule.html">Расписание всех кружков</a>
+                    <div class="theme-switch-wrapper">
+                        <label class="theme-switch" for="checkbox">
+                            <input type="checkbox" id="checkbox" />
+                            <div class="slider round"></div>
+                        </label>
+                        <span>Темная тема</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="full-schedule">
+            <h1>Сводное расписание всех кружков</h1>
+            
+            <div class="filter-section">
+                <h3>Фильтр по кружкам:</h3>
+                <div class="filter-options" id="club-filters">
+                    <!-- Фильтры будут добавлены через JavaScript -->
+                </div>
+                <button id="apply-filters">Применить фильтры</button>
+                <button id="reset-filters">Сбросить все</button>
+            </div>
+
+            <div class="schedule-table">
+                <table id="full-schedule-table">
+                    <thead>
+                        <tr>
+                            <th>День недели</th>
+                            <th>Кружок</th>
+                            <th>Время</th>
+                            <th>Место</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Расписание будет заполнено через JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#">О нас</a>
+            <a href="#">Контакты</a>
+        </div>
+        <p>&copy; 2025 Расписание кружков.</p>
+    </footer>
+
+    <script>
+// script.js
+document.addEventListener('DOMContentLoaded', function() {
+    // Инициализация темы
+    if (window.initTheme) {
+        initTheme();
+    }
+    
+    // Инициализация фильтров (только на странице расписания)
+    if (document.getElementById('club-filters')) {
+        initFilters();
+    }
+});
+
+// Функции для работы с фильтрами
+function initFilters() {
+    if (typeof allSchedule === 'undefined') return;
+    
+    const uniqueClubs = [...new Set(allSchedule.map(item => item.club))];
+    const filtersContainer = document.getElementById('club-filters');
+    filtersContainer.innerHTML = '';
+    
+    uniqueClubs.forEach(club => {
+        const label = document.createElement('label');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = club;
+        checkbox.className = 'club-filter';
+        checkbox.checked = true; // Все фильтры включены по умолчанию
+        
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(' ' + club));
+        filtersContainer.appendChild(label);
+    });
+    
+    // Применяем фильтры сразу после инициализации
+    applyFilters();
+
+    // Назначаем обработчики
+    document.getElementById('apply-filters').addEventListener('click', applyFilters);
+    document.getElementById('reset-filters').addEventListener('click', resetFilters);
+}
+
+function applyFilters() {
+    const selected = getSelectedFilters();
+    const filtered = allSchedule.filter(item => selected.includes(item.club));
+    displayFilteredSchedule(filtered);
+    saveFilters(selected);
+}
+
+function resetFilters() {
+    document.querySelectorAll('.club-filter').forEach(c => c.checked = true);
+    displayFilteredSchedule(allSchedule);
+    localStorage.removeItem('scheduleFilters');
+}
+
+function getSelectedFilters() {
+    return Array.from(document.querySelectorAll('.club-filter:checked')).map(c => c.value);
+}
+
+function saveFilters(selected) {
+    localStorage.setItem('scheduleFilters', JSON.stringify(selected));
+}
+
+function applySavedFilters() {
+    const saved = localStorage.getItem('scheduleFilters');
+    if (!saved) return;
+    
+    try {
+        const savedFilters = JSON.parse(saved);
+        document.querySelectorAll('.club-filter').forEach(checkbox => {
+            checkbox.checked = savedFilters.includes(checkbox.value);
+        });
+        
+        const filtered = allSchedule.filter(item => savedFilters.includes(item.club));
+        displayFilteredSchedule(filtered);
+    } catch (e) {
+        console.error('Ошибка загрузки фильтров:', e);
+    }
+}
+
+function displayFilteredSchedule(data) {
+    const tableBody = document.querySelector('#full-schedule-table tbody');
+    tableBody.innerHTML = '';
+
+    if (!data || data.length === 0) {
+        const row = tableBody.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = 4;
+        cell.textContent = 'Нет данных. Измените фильтры.';
+        return;
+    }
+
+
+    // Группировка по дням
+    const daysOrder = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
+    const grouped = {};
+
+    data.forEach(item => {
+        if (!grouped[item.day]) grouped[item.day] = [];
+        grouped[item.day].push(item);
+    });
+
+    // Заполнение таблицы
+    daysOrder.forEach(day => {
+        if (!grouped[day]) return;
+
+        grouped[day].forEach((item, index) => {
+            const row = tableBody.insertRow();
+            
+            if (index === 0) {
+                const dayCell = row.insertCell();
+                dayCell.textContent = day;
+                dayCell.rowSpan = grouped[day].length;
+                dayCell.className = 'day-cell';
+            }
+            
+            row.insertCell().textContent = item.club;
+            row.insertCell().textContent = item.time;
+            row.insertCell().textContent = item.location;
+        });
+    });
+}
+
+function setupEventListeners() {
+    document.getElementById('apply-filters').addEventListener('click', () => {
+        const selected = Array.from(document.querySelectorAll('.club-filter:checked')).map(c => c.value);
+        const filtered = allSchedule.filter(item => selected.includes(item.club));
+        displayFilteredSchedule(filtered);
+    });
+
+    document.getElementById('reset-filters').addEventListener('click', () => {
+        document.querySelectorAll('.club-filter').forEach(c => c.checked = true);
+        displayFilteredSchedule(allSchedule);
+    });
+}
+</script>
+</body>
+</html>

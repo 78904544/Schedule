@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <script src="/js/data.js" defer></script>
+    <script>    
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расписание кружков</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="index.html" class="nav-logo">Расписание</a>
+                <div class="nav-links">
+                    <a href="index.html">Главная</a>
+                    <a href="schedule.html">Расписание всех кружков</a>
+                    <div class="theme-switch-wrapper">
+                        <label class="theme-switch" for="checkbox">
+                            <input type="checkbox" id="checkbox" />
+                            <div class="slider round"></div>
+                        </label>
+                        <span>Темная тема</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="welcome-section">
+            <h1>Добро пожаловать на сайт расписания кружков</h1>
+            <p>Здесь вы можете найти информацию о всех кружках, их расписании, руководителях и местах проведения занятий.</p>
+        </section>
+
+        <section class="clubs-section">
+            <h2>Спортивные кружки</h2>
+            <div class="clubs-grid">
+                <!-- Карточки кружков остаются без изменений -->
+                <!-- Баскетбол -->
+                <div class="club-card" onclick="window.location.href='club.html?name=Баскетбол'">
+                    <h3>Баскетбол</h3>
+                    <div class="club-details">
+                        <p><strong>Руководитель:</strong> Терских Валерий Геннадьевич</p>
+                        <p><strong>Место:</strong> Спортзал</p>
+                        <p>Занятия по баскетболу для студентов всех курсов.</p>
+                    </div>
+                </div>
+
+                <!-- Волейбол -->
+                <div class="club-card" onclick="window.location.href='club.html?name=Волейбол'">
+                    <h3>Волейбол</h3>
+                    <div class="club-details">
+                        <p><strong>Руководитель:</strong> Ершов Сергей Владимирович</p>
+                        <p><strong>Место:</strong> Спортзал</p>
+                        <p>Тренировки по волейболу для начинающих и продвинутых игроков.</p>
+                    </div>
+                </div>
+
+                <!-- Настольный теннис -->
+                <div class="club-card" onclick="window.location.href='club.html?name=Настольный теннис'">
+                    <h3>Настольный теннис</h3>
+                    <div class="club-details">
+                        <p><strong>Руководитель:</strong> Ершов Сергей Владимирович</p>
+                        <p><strong>Место:</strong> Теннисный зал</p>
+                        <p>Индивидуальные и парные тренировки по настольному теннису.</p>
+                    </div>
+                </div>
+
+                <!-- Мини-футбол -->
+                <div class="club-card" onclick="window.location.href='club.html?name=Мини-футбол'">
+                    <h3>Мини-футбол</h3>
+                    <div class="club-details">
+                        <p><strong>Руководитель:</strong> Терских Валерий Геннадьевич</p>
+                        <p><strong>Место:</strong> Стадион</p>
+                        <p>Тренировки по мини-футболу, участие в межколледжных соревнованиях.</p>
+                    </div>
+                </div>
+
+                <!-- Армрестлинг -->
+                <div class="club-card" onclick="window.location.href='club.html?name=Армрестлинг'">
+                    <h3>Армрестлинг</h3>
+                    <div class="club-details">
+                        <p><strong>Руководитель:</strong> Холин Г.В.</p>
+                        <p><strong>Место:</strong> Тренажерный зал</p>
+                        <p>Занятия по армрестлингу, развитие силы и выносливости.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Творческие кружки</h2>
+            <div class="clubs-grid">
+                <!-- Танцы -->
+                <div class="club-card" onclick="window.location.href='club.html?name=Танцы'">
+                    <h3>Кружок танцев «Энергия»</h3>
+                    <div class="club-details">
+                        <p><strong>Руководитель:</strong> Богданова Ирина Михайловна</p>
+                        <p><strong>Место:</strong> Культурно Эстетический Центр (КЭЦ)</p>
+                        <p>Обучение современным и классическим танцевальным направлениям.</p>
+                        <p><strong>Кабинет:</strong> кб.114 / к. 2</p>
+                    </div>
+                </div>
+
+                <!-- Медиацентр -->
+                <div class="club-card" onclick="window.location.href='club.html?name=Медиацентр'">
+                    <h3>Медиацентр</h3>
+                    <div class="club-details">
+                        <p><strong>Руководитель:</strong> Стародубцева Евгения Игоревна</p>
+                        <p><strong>Место:</strong> Кабинет 121 / к.1 или 216 / к.2</p>
+                        <p>Освещение жизни колледжа, подготовка конкурсов, съемка мероприятий, монтаж видео.</p>
+                    </div>
+                </div>
+
+                <!-- Кино -->
+                <div class="club-card" onclick="window.location.href='club.html?name=Кружок съемки кино - ЛЭП-500'">
+                    <h3>Кружок съемки кино «ЛЭП-500»</h3>
+                    <div class="club-details">
+                        <p><strong>Руководитель:</strong> Гречман Александр Евгеньевич</p>
+                        <p><strong>Место:</strong> КЭЦ</p>
+                        <p>Постановка театральных сцен, миниатюр, участие в мероприятиях колледжа.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Студенческий совет</h2>
+            <div class="clubs-grid">
+                <!-- Знатоки -->
+                <div class="club-card" onclick="window.location.href='club.html?name=Знатоки'">
+                    <h3>Научная группа "Знатоки"</h3>
+                    <div class="club-details">
+                        <p><strong>Руководитель:</strong> Михайлова Кристина</p>
+                        <p><strong>Место:</strong> Кабинет 305 / к.1</p>
+                        <p>Организация научных мероприятий, подготовка к олимпиадам.</p>
+                    </div>
+                </div>
+
+                <!-- Учебная группа -->
+                <div class="club-card" onclick="window.location.href='club.html?name=Учебная группа'">
+                    <h3>Учебная группа</h3>
+                    <div class="club-details">
+                        <p><strong>Руководители:</strong> Аверьянова Ульяна и Галямова Милана</p>
+                        <p><strong>Место:</strong> Кабинет 210 / к.1</p>
+                        <p>Организация учебных мероприятий, помощь в подготовке к экзаменам.</p>
+                    </div>
+                </div>
+
+                <!-- Орггруппа -->
+                <div class="club-card" onclick="window.location.href='club.html?name=Организационная группа'">
+                    <h3>Организационная группа</h3>
+                    <div class="club-details">
+                        <p><strong>Руководители:</strong> Дьяченко Анна и Врадий Диана</p>
+                        <p><strong>Место:</strong> Кабинет 215 / к.1</p>
+                        <p>Организация мероприятий и праздников в колледже.</p>
+                    </div>
+                </div>
+
+                <!-- Спортивная группа -->
+                <div class="club-card" onclick="window.location.href='club.html?name=Спортивная группа'">
+                    <h3>Спортивная группа</h3>
+                    <div class="club-details">
+                        <p><strong>Руководитель:</strong> Окунев Игорь</p>
+                        <p><strong>Место:</strong> Спортзал</p>
+                        <p>Организация спортивных мероприятий и соревнований.</p>
+                    </div>
+                </div>
+
+                <!-- Инфогруппа -->
+                <div class="club-card" onclick="window.location.href='club.html?name=Информационная группа'">
+                    <h3>Информационно-рекламная группа</h3>
+                    <div class="club-details">
+                        <p><strong>Руководитель:</strong> Еропова Василина</p>
+                        <p><strong>Место:</strong> Кабинет 220 / к.1</p>
+                        <p>Информационное сопровождение мероприятий, работа с соцсетями.</p>
+                    </div>
+                </div>
+
+                <!-- Амбасадоры -->
+                <div class="club-card" onclick="window.location.href='club.html?name=Амбасадоры'">
+                    <h3>Амбасадоры ФП "Профессионалитета"</h3>
+                    <div class="club-details">
+                        <p><strong>Руководитель:</strong> Попова Елизавета</p>
+                        <p><strong>Место:</strong> Кабинет 310 / к.1</p>
+                        <p>Представление колледжа на различных мероприятиях.</p>
+                    </div>
+                </div>
+
+                <!-- Наш выбор -->
+                <div class="club-card" onclick="window.location.href='club.html?name=Наш выбор'">
+                    <h3>Профилактика социально негативных явлений "Наш ВЫБОР"</h3>
+                    <div class="club-details">
+                        <p><strong>Руководитель:</strong> Бурлакова Елизавета</p>
+                        <p><strong>Место:</strong> Кабинет 205 / к.1</p>
+                        <p>Организация мероприятий по профилактике негативных явлений.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#">О нас</a>
+            <a href="#">Контакты</a>
+        </div>
+        <p>&copy; 2025 Расписание кружков.</p>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Страница кружка</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="index.html" class="nav-logo">Расписание</a>
+                <div class="nav-links">
+                    <a href="index.html">Главная</a>
+                    <a href="schedule.html">Расписание всех кружков</a>
+                    <div class="theme-switch-wrapper">
+                        <label class="theme-switch" for="checkbox">
+                            <input type="checkbox" id="checkbox" />
+                            <div class="slider round"></div>
+                        </label>
+                        <span>Темная тема</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="club-page">
+            <h1 id="club-name">Загрузка...</h1>
+            <div class="club-info">
+                <div class="leader-info">
+                    <div class="leader-photo">
+                        <img id="leader-photo" src="images/leaders/default.jpg" alt="Фото руководителя">
+                    </div>
+                    <div>
+                        <p><strong>Руководитель:</strong> <span id="club-leader">Загрузка...</span></p>
+                        <p><strong>Контакты:</strong> <span id="club-contacts">Загрузка...</span></p>
+                        <p><strong>Место проведения:</strong> <span id="club-location">Загрузка...</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="schedule">
+                <h2>Расписание занятий</h2>
+                <table id="club-schedule">
+                    <thead>
+                        <tr>
+                            <th>День недели</th>
+                            <th>Время</th>
+                            <th>Место</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Заполняется JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="description">
+                <h2>Описание</h2>
+                <p id="club-description">Загрузка...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#">О нас</a>
+            <a href="#">Контакты</a>
+        </div>
+        <p>&copy; 2025 Расписание кружков.</p>
+    </footer>
+
+    <!-- Подключаем data.js перед нашим скриптом -->
+    <script src="js/data.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Установка темы
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        
+        // Настройка переключателя темы
+        const checkbox = document.getElementById('checkbox');
+        if (checkbox) {
+            checkbox.checked = savedTheme === 'dark';
+            checkbox.addEventListener('change', function() {
+                const theme = this.checked ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+            });
+        }
+
+        // Загрузка данных кружка
+        loadClubData();
+    });
+
+    function loadClubData() {
+        try {
+            // Получаем название кружка из URL
+            const params = new URLSearchParams(window.location.search);
+            const clubName = params.get('name');
+            
+            if (!clubName) {
+                showError("Не указано название кружка");
+                return;
+            }
+
+            // Проверяем, загрузилась ли база данных
+            if (!window.clubsDatabase) {
+                showError("База данных кружков не загружена");
+                return;
+            }
+
+            // Ищем кружок в базе данных (регистронезависимо)
+            const foundClub = Object.keys(clubsDatabase).find(key => 
+                key.toLowerCase() === clubName.toLowerCase()
+            );
+
+            if (!foundClub) {
+                showError(`Кружок "${clubName}" не найден`);
+                return;
+            }
+
+            // Получаем данные кружка
+            const clubData = clubsDatabase[foundClub];
+            
+            // Отображаем данные
+            displayClubInfo(foundClub, clubData);
+        } catch (error) {
+            console.error("Ошибка загрузки данных:", error);
+            showError("Произошла ошибка при загрузке данных");
+        }
+    }
+
+    function displayClubInfo(name, data) {
+        // Устанавливаем заголовок
+        document.getElementById('club-name').textContent = name;
+        
+        // Заполняем информацию о руководителе
+        document.getElementById('club-leader').textContent = data.leader || "Информация отсутствует";
+        document.getElementById('club-contacts').textContent = data.contacts || "Контакты не указаны";
+        
+        // Устанавливаем фото руководителя
+        const leaderPhoto = document.getElementById('leader-photo');
+        leaderPhoto.src = data.photo || "images/leaders/default.jpg";
+        leaderPhoto.alt = `Фото руководителя ${data.leader || name}`;
+        
+        // Заполняем расписание
+        const scheduleBody = document.getElementById('club-schedule').querySelector('tbody');
+        scheduleBody.innerHTML = '';
+        
+        if (data.schedule && data.schedule.length > 0) {
+            // Заполняем первое место проведения
+            document.getElementById('club-location').textContent = data.schedule[0].location || "Место не указано";
+            
+            // Добавляем все занятия в таблицу
+            data.schedule.forEach(session => {
+                const row = scheduleBody.insertRow();
+                row.insertCell().textContent = session.day || "День не указан";
+                row.insertCell().textContent = session.time || "Время не указано";
+                row.insertCell().textContent = session.location || "Место не указано";
+            });
+        } else {
+            document.getElementById('club-location').textContent = "Расписание отсутствует";
+            const row = scheduleBody.insertRow();
+            const cell = row.insertCell();
+            cell.colSpan = 3;
+            cell.textContent = "Расписание занятий пока не добавлено";
+        }
+        
+        // Заполняем описание
+        document.getElementById('club-description').textContent = data.description || "Описание отсутствует";
+    }
+
+    function showError(message) {
+        const main = document.querySelector('main');
+        main.innerHTML = `
+            <div class="error">
+                <h2>${message}</h2>
+                <p><a href="index.html">Вернуться на главную страницу</a></p>
+            </div>
+        `;
+    }
+    </script>
+</body>
+</html>
