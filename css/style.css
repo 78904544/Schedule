@@ -431,3 +431,80 @@ html {
 body {
     transition: background-color 0.3s ease;
 }
+/* Мобильное меню */
+.menu-toggle {
+    display: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+    
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .nav-links.active {
+        display: flex;
+    }
+    
+    .theme-switch-wrapper {
+        margin-left: 0;
+        padding: 10px 0;
+    }
+}
+@media (max-width: 480px) {
+    .club-card {
+        height: auto;
+        padding: 15px;
+    }
+    
+    .club-details {
+        opacity: 1;
+        max-height: none;
+    }
+    
+    .clubs-grid {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 600px) {
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .day-cell {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+    }
+}
+a, button, .club-card {
+    min-height: 48px;
+    touch-action: manipulation;
+}
+
+button, .club-card {
+    -webkit-tap-highlight-color: transparent;
+}
+@media (max-width: 480px) {
+    body {
+        font-size: 16px;
+        line-height: 1.5;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+}
